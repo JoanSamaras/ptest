@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { TermDefinition } from 'helpers/types';
 import { api } from 'services';
+import { Row } from 'components/row-column';
 import { Text } from 'components/text';
+import { StyledTable } from './table-view';
+import { spacings } from 'design-system/spacings';
+
+const Wrapper = styled( Row )`
+    width: 90vh;
+`;
 
 export const Table = (): JSX.Element => {
     const [ error, setError ] = useState<string>( '' );
@@ -28,6 +36,26 @@ export const Table = (): JSX.Element => {
     }, [] );
 
     return (
-        <Text colour='dark'>hello</Text>
+        <Wrapper alignCenter>
+            <Text colour='white' size='h3' bottom={ spacings._6 }>
+                Terms Table
+            </Text>
+            <StyledTable 
+                columnHeaders={[
+                    'cat',
+                    'dog'
+                ]}
+                data={[
+                    {
+                        cat: 7,
+                        dog: 6
+                    },
+                    {
+                        cat: 5,
+                        dog: 5
+                    }
+                ]}
+            />
+        </Wrapper>
     );
 }
