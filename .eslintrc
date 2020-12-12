@@ -107,11 +107,17 @@
         ],
         "array-bracket-spacing": [
             "error",
-            "always"
+            "always",
+            {
+                "singleValue": true,
+                "objectsInArrays": false,
+                "arraysInArrays": false
+            }
         ],
         "no-console": "off",
         "no-loop-func": "off",
         "no-redeclare": "off",
-        "no-shadow": "off"
+        "no-shadow": "off",
+        "import/prefer-default-export": "off"
     }
 }
