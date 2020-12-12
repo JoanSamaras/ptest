@@ -3,7 +3,6 @@ import './App.css';
 import styled from 'styled-components';
 import { Table } from 'components/table';
 import { Column } from 'components/row-column';
-import { Text } from 'components/text';
 
 const Wrapper = styled( Column )`
     background-color: #282c34;

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { TermDefinition } from 'helpers/types';
 import { api } from 'services';
 import { Row } from 'components/row-column';
+import { ErrorMessage } from 'components/error-message';
 import { Text } from 'components/text';
 import { StyledTable } from './table-view';
 import { spacings } from 'design-system/spacings';
@@ -37,13 +38,19 @@ export const Table = (): JSX.Element => {
 
     return (
         <Wrapper alignCenter>
-            <Text colour='white' size='h3' bottom={ spacings._6 }>
-                Terms Table
-            </Text>
-            <StyledTable 
-                columnHeaders={ terms.length > 0 ? Object.keys( terms[0] ) : [] }
-                data={ terms }
-            />
+            { error
+                ? <ErrorMessage text={ error } />
+                : (
+                    <>
+                        <Text colour='white' size='h3' bottom={ spacings._6 }>
+                            Terms Table
+                        </Text>
+                        <StyledTable 
+                            columnHeaders={ terms.length > 0 ? Object.keys( terms[0] ) : [] }
+                            data={ terms }
+                        />
+                    </>
+                )}
         </Wrapper>
     );
 }
