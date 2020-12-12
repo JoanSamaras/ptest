@@ -9,6 +9,7 @@ export const TableWrapper = styled.table`
     width: 100%;
     background-color: ${ colours.grey2 };
     padding: ${ spacings._3 };
+    overflow: auto;
 `;
 
 export const Thead = styled.thead`
@@ -28,16 +29,19 @@ export const Tfoot = styled.tfoot`
     align-self: flex-end;
 `;
 
-export const Cell = styled.td<{ width: number, withPaddingBottom?: boolean }>`
-    width: ${ p => `${ p.width }%` };
+export const Cell = styled.td<{ withPaddingBottom?: boolean }>`
     display: flex;
+    padding-right: ${ spacings._2 };
     ${ p => p.withPaddingBottom && css`
         padding-bottom: ${ spacings._2 };
     ` }
 `;
 
-export const FullWidthRow = styled.tr`
-    width: 100%;
+export const FullWidthRow = styled.tr<{ withBorderBottom?: boolean }>`
+    width: fit-content;
     display: flex;
     flex-direction: row;
+    ${ p => p.withBorderBottom && css`
+        border-bottom: ${ borderSizes._1 } solid ${ colours.info5 };
+    ` }
 `;

@@ -8,7 +8,7 @@ import { StyledTable } from './table-view';
 import { spacings } from 'design-system/spacings';
 
 const Wrapper = styled( Row )`
-    width: 90vh;
+    width: 95vh;
 `;
 
 export const Table = (): JSX.Element => {
@@ -41,20 +41,8 @@ export const Table = (): JSX.Element => {
                 Terms Table
             </Text>
             <StyledTable 
-                columnHeaders={[
-                    'cat',
-                    'dog'
-                ]}
-                data={[
-                    {
-                        cat: 7,
-                        dog: 6
-                    },
-                    {
-                        cat: 5,
-                        dog: 5
-                    }
-                ]}
+                columnHeaders={ terms.length > 0 ? Object.keys( terms[0] ) : [] }
+                data={ terms }
             />
         </Wrapper>
     );

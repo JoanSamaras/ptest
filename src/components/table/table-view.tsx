@@ -15,14 +15,13 @@ export const StyledTable = ( p: Props ): JSX.Element => {
         displayedColumnHeaders,
         data
     } = p;
-    const cellWidth = columnHeaders.length ? 100 / columnHeaders.length : 0;
 
     return (
         <TableWrapper>
             <Thead>
                 <FullWidthRow>
                     { columnHeaders.map( header => (
-                        <Cell width={ cellWidth } key={ header }>
+                        <Cell key={ header }>
                             <Text colour='extraDark' weight='bold'>
                                 { header }
                             </Text>
@@ -33,10 +32,10 @@ export const StyledTable = ( p: Props ): JSX.Element => {
 
             <Tbody>
                 { data.map( d => (
-                    <FullWidthRow key={ JSON.stringify( d ) }>
+                    <FullWidthRow key={ JSON.stringify( d ) } withBorderBottom>
                         { columnHeaders.map( header => (
-                            <Cell width={ cellWidth } key={ `${ header }_${ cellWidth }` } withPaddingBottom>
-                                <Text>{ d[ header ] }</Text>
+                            <Cell key={ `${ header }` } withPaddingBottom>
+                                <Text>{ JSON.stringify( d[ header ] ) }</Text>
                             </Cell>
                         ) ) }
                     </FullWidthRow>
@@ -45,7 +44,7 @@ export const StyledTable = ( p: Props ): JSX.Element => {
 
             <Tfoot>
                 <FullWidthRow>
-                    <Cell width={ 100 }>Cats win!</Cell>
+                    <Cell>Cats win!</Cell>
                 </FullWidthRow>
             </Tfoot>
 
