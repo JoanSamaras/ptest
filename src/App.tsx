@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import styled from 'styled-components';
+import { Table } from 'components/table';
 
 const Header = styled.div`
     background-color: #282c34;
@@ -14,25 +15,18 @@ const Header = styled.div`
     color: white;
 `;
 
-function App() {
-  return (
-    <div className="App">
-      <Header>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </Header>
-    </div>
-  );
+const App = (): JSX.Element => {
+    return (
+        <div className="App">
+            <Table />
+            <Header>
+                <img src={logo} className="App-logo" alt="logo" />
+                <p>
+                    Edit <code>src/App.tsx</code> and save to reload.
+                </p>
+            </Header>
+        </div>
+    );
 }
 
 export default App;
