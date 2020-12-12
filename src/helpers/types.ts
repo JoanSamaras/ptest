@@ -63,4 +63,4 @@ export type OntologiesRES = {
         totalElements: number
         totalPages: number
     }
-}
+};
