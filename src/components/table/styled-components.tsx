@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import { colours } from 'design-system/colours';
 import { spacings } from 'design-system/spacings';
 import { borderSizes } from 'design-system/border-sizes';
+import { Text } from 'components/text';
 
 export const TableWrapper = styled.table`
     display: flex;
@@ -32,9 +33,15 @@ export const Tfoot = styled.tfoot`
 export const Cell = styled.td<{ withPaddingBottom?: boolean }>`
     display: flex;
     padding-right: ${ spacings._2 };
+    flex-wrap: wrap;
+    word-break: break-word;
     ${ p => p.withPaddingBottom && css`
         padding-bottom: ${ spacings._2 };
     ` }
+     
+    > ${ Text } {
+        width: 100%;
+    }
 `;
 
 export const FullWidthRow = styled.tr<{ withBorderBottom?: boolean }>`

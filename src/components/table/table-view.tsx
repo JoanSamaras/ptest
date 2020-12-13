@@ -2,6 +2,7 @@ import React from 'react';
 import { Dictionary } from 'helpers/types';
 import { Cell, TableWrapper, Thead, Tbody, Tfoot, FullWidthRow } from './styled-components';
 import { Text } from 'components/text';
+import { calculateCellView } from './cell-view';
 
 type Props = {
     columnHeaders: string[]
@@ -21,9 +22,18 @@ export const StyledTable = ( p: Props ): JSX.Element => {
             <Thead>
                 <FullWidthRow>
                     { columnHeaders.map( header => (
-                        <Cell key={ header }>
+                        <Cell 
+                            key={ header }
+                            style={{
+                                width: '10rem',
+                                textAlign: 'center'
+                            }}
+                        >
                             <Text colour='extraDark' weight='bold'>
-                                { header }
+                                { displayedColumnHeaders && displayedColumnHeaders[ header ] 
+                                    ? displayedColumnHeaders[ header ] 
+                                    : header 
+                                }
                             </Text>
                         </Cell>
                     ) ) }
@@ -34,9 +44,7 @@ export const StyledTable = ( p: Props ): JSX.Element => {
                 { data.map( d => (
                     <FullWidthRow key={ JSON.stringify( d ) } withBorderBottom>
                         { columnHeaders.map( header => (
-                            <Cell key={ `${ header }` } withPaddingBottom>
-                                <Text>{ JSON.stringify( d[ header ] ) }</Text>
-                            </Cell>
+                            calculateCellView( d[ header ] )
                         ) ) }
                     </FullWidthRow>
                 ) ) }
