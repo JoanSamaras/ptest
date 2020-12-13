@@ -18,7 +18,11 @@ export const StyledTable = ( p: Props ): JSX.Element => {
     } = p;
 
     return (
-        <TableWrapper>
+        <TableWrapper
+            style={{
+                height: '95%'
+            }}
+        >
             <Thead>
                 <FullWidthRow>
                     { columnHeaders.map( header => (
@@ -43,8 +47,8 @@ export const StyledTable = ( p: Props ): JSX.Element => {
             <Tbody>
                 { data.map( d => (
                     <FullWidthRow key={ JSON.stringify( d ) } withBorderBottom>
-                        { columnHeaders.map( header => (
-                            calculateCellView( d[ header ] )
+                        { columnHeaders.map( ( header, index ) => (
+                            calculateCellView( d[ header ], columnHeaders[index] )
                         ) ) }
                     </FullWidthRow>
                 ) ) }

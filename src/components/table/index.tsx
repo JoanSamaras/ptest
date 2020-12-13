@@ -9,7 +9,10 @@ import { StyledTable } from './table-view';
 import { spacings } from 'design-system/spacings';
 
 const Wrapper = styled( Row )`
-    width: 95vh;
+    width: 95vw;
+    height: 95vh;
+    display: flex;
+    flex-wrap: wrap;
 `;
 
 export const Table = (): JSX.Element => {
@@ -20,7 +23,6 @@ export const Table = (): JSX.Element => {
         try {
             const res = await api.getTermDefinitions();
 
-            console.log( res );
             if ( res ) {
                 setTerms( res.embedded.terms );
             }

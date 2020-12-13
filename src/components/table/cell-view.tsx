@@ -20,11 +20,13 @@ type BasicCellProps = {
 
 export type TextCellProps = BasicCellProps & {
     text?: string 
+    parentHeader: string
 };
 
 export const SimpleTextCellView = ( p: TextCellProps ): JSX.Element => {
     const {
         text,
+        parentHeader,
         colour,
         size,
         withPaddingBottom
@@ -32,11 +34,12 @@ export const SimpleTextCellView = ( p: TextCellProps ): JSX.Element => {
 
     return (
         <Cell 
-            key={ text } 
+            key={ `${ text }_${ parentHeader }` } 
             withPaddingBottom={ withPaddingBottom }
             style={{
                 width: '10rem',
-                textAlign: 'center'
+                textAlign: 'center',
+                marginTop: '1em'
             }}
         >
             <Text colour={ colour } size={ size }>
@@ -58,17 +61,18 @@ export const UnorderedListCellView = ( p: ListCellProps ): JSX.Element => {
         withPaddingBottom
     } = p;
 
+    
     return (
-        <Cell key={ data.join( '' ) } withPaddingBottom={ withPaddingBottom }>
+        <Cell withPaddingBottom={ withPaddingBottom }>
             <Text colour={ colour } size={ size }>
-                <ul>
-                    { data.map( d => (
+                <ul key={ JSON.stringify( data ) || data.join( '' ) }>
+                    { data.map( ( d, index ) => (
                         <li 
                             style={{
                                 marginBottom: spacings._4,
                                 maxWidth: '10rem'
                             }}
-                            key={ d }
+                            key={ `${ d }_${ index }` }
                         >
                             { d }
                         </li>
@@ -85,7 +89,7 @@ export type EmbeddedTableProps = {
     displayedHeaders?: Dictionary<string>
 }
 
-export const EmbeddedTableCellView = ( p: EmbeddedTableProps ) => {
+export const EmbeddedTableCellView = ( p: EmbeddedTableProps ): JSX.Element => {
     const {
         data,
         headers,
@@ -93,12 +97,12 @@ export const EmbeddedTableCellView = ( p: EmbeddedTableProps ) => {
     } = p;
 
     const filteredHeaders = headers.filter( h => h.length > 1 && !parseInt( h ) );
-    const view = useCallback( ( data: any | null ) => {
+    const view = useCallback( ( data: any | null, parent: string ) => {
         const fromattedData = Array.isArray( data ) && data.length === 1
             ? data[0]
             : data;
 
-        return calculateCellView( fromattedData );
+        return calculateCellView( fromattedData, parent );
     }, [] );
 
     return (
@@ -128,8 +132,8 @@ export const EmbeddedTableCellView = ( p: EmbeddedTableProps ) => {
 
                 <Tbody>
                     <FullWidthRow>
-                        { data.map( d => (
-                            view( d )
+                        { data.map( ( d, index ) => (
+                            view( d, filteredHeaders[index] )
                         ) ) }
                     </FullWidthRow>
                 </Tbody>
@@ -139,18 +143,19 @@ export const EmbeddedTableCellView = ( p: EmbeddedTableProps ) => {
 };
 
 const views = {
-    [ CellViewType.plainText ]: ( props?: TextCellProps ) => {
-        if ( props ) {
+    [ CellViewType.plainText ]: ( props: TextCellProps ) => {
+        if ( props.text ) {
             return (
                 <SimpleTextCellView 
                     text={ props.text }
+                    parentHeader={ props.parentHeader }
                     colour={ props.colour }
                     size={ props.size }
                     withPaddingBottom={ props.withPaddingBottom }
                 />
             )
         } else {
-            return <SimpleTextCellView />
+            return <SimpleTextCellView parentHeader={ props.parentHeader } />
         }
     },
 
@@ -176,16 +181,18 @@ const views = {
     }
 };
 
-export const calculateCellView = ( cellData: any | null ) => {
+export const calculateCellView = ( cellData: any | null, parentHeader: string ): JSX.Element => {
     let cellView;
     
     if ( cellData ) {
         if ( typeof cellData === 'string' ) {
             cellView = views[ CellViewType.plainText ]( {
-                text: cellData
+                text: cellData,
+                parentHeader 
             } )
         } else {
             if ( Array.isArray( cellData ) && typeof cellData[0] === 'string' ) {
+                // presenting a string array as unordered list
                 cellView = views[ CellViewType.unorderedList ]( {
                     data: cellData
                 } );
@@ -202,7 +209,9 @@ export const calculateCellView = ( cellData: any | null ) => {
         }
     } else {
         console.log( 'in' )
-        cellView = views[ CellViewType.plainText ]()
+        cellView = views[ CellViewType.plainText ]( {
+            parentHeader
+        } )
     }
 
     return cellView;
