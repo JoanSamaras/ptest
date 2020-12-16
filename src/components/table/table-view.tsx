@@ -60,7 +60,7 @@ export const StyledTable = ( p: Props ): JSX.Element => {
 
             <Tbody>
                 { paginatedData.map( d => (
-                    <FullWidthRow key={ JSON.stringify( d ) } withBorderBottom>
+                    <FullWidthRow key={ JSON.stringify( [ d, ...columnHeaders ] ) } withBorderBottom>
                         { columnHeaders.map( ( header, index ) => (
                             calculateCellView( d[ header ], columnHeaders[index] )
                         ) ) }

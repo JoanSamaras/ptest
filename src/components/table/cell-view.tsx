@@ -60,12 +60,11 @@ export const UnorderedListCellView = ( p: ListCellProps ): JSX.Element => {
         size,
         withPaddingBottom
     } = p;
-
     
     return (
         <Cell withPaddingBottom={ withPaddingBottom }>
             <Text colour={ colour } size={ size }>
-                <ul key={ JSON.stringify( data ) || data.join( '' ) }>
+                <ul key={ JSON.stringify( data ) }>
                     { data.map( ( d, index ) => (
                         <li 
                             style={{
@@ -87,13 +86,15 @@ export type EmbeddedTableProps = {
     data: any[]
     headers: string[]
     displayedHeaders?: Dictionary<string>
+    parentHeader: string
 }
 
 export const EmbeddedTableCellView = ( p: EmbeddedTableProps ): JSX.Element => {
     const {
         data,
         headers,
-        displayedHeaders
+        displayedHeaders,
+        parentHeader
     } = p;
 
     const filteredHeaders = headers.filter( h => h.length > 1 && !parseInt( h ) );
@@ -131,7 +132,7 @@ export const EmbeddedTableCellView = ( p: EmbeddedTableProps ): JSX.Element => {
                 ) }
 
                 <Tbody>
-                    <FullWidthRow>
+                    <FullWidthRow key={ JSON.stringify( [ parentHeader, ...data, ...headers ] ) }>
                         { data.map( ( d, index ) => (
                             view( d, filteredHeaders[index] )
                         ) ) }
@@ -147,37 +148,41 @@ const views = {
         if ( props.text ) {
             return (
                 <SimpleTextCellView 
+                    key={ `${ props.text }_${ props.parentHeader }` }
                     text={ props.text }
                     parentHeader={ props.parentHeader }
                     colour={ props.colour }
                     size={ props.size }
                     withPaddingBottom={ props.withPaddingBottom }
                 />
-            )
+            );
         } else {
-            return <SimpleTextCellView parentHeader={ props.parentHeader } />
+            return <SimpleTextCellView key={ `${ props.text }__${ props.parentHeader }` } parentHeader={ props.parentHeader } />
         }
     },
 
     [ CellViewType.unorderedList ]: ( props: ListCellProps ) => {
         return (
-            <UnorderedListCellView
+            <UnorderedListCellView 
+                key={ JSON.stringify( props.data ) }
                 data={ props.data }
                 colour={ props.colour }
                 size={ props.size }
                 withPaddingBottom={ props.withPaddingBottom }
             />
-        )
+        );
     },
 
     [ CellViewType.embeddedTable ]: ( props: EmbeddedTableProps ) => {
         return (
             <EmbeddedTableCellView
+                key={ JSON.stringify( [ ...props.headers, ...props.data ] ) }
                 data={ props.data }
                 headers={ props.headers }
-                displayedHeaders={ props.displayedHeaders }
+                displayedHeaders={ props.displayedHeaders } 
+                parentHeader={ props.parentHeader }
             />
-        )
+        );
     }
 };
 
@@ -189,28 +194,31 @@ export const calculateCellView = ( cellData: any | null, parentHeader: string ):
             cellView = views[ CellViewType.plainText ]( {
                 text: cellData,
                 parentHeader 
-            } )
+            } );
         } else {
             if ( Array.isArray( cellData ) && typeof cellData[0] === 'string' ) {
                 // presenting a string array as unordered list
                 cellView = views[ CellViewType.unorderedList ]( {
                     data: cellData
                 } );
-
-                return cellView;
             } else {
-                cellView = views[ CellViewType.embeddedTable ]( {
-                    data: Object.values( cellData ),
-                    headers: Object.keys( cellData )
-                } );
-
-                return cellView;
+                if ( Object.values( cellData ).length > 0 ) {
+                    cellView = views[ CellViewType.embeddedTable ]( {
+                        data: Object.values( cellData ),
+                        headers: Object.keys( cellData ),
+                        parentHeader
+                    } );
+                } else {
+                    cellView = views[ CellViewType.plainText ]( {
+                        parentHeader
+                    } );
+                }
             }
         }
     } else {
         cellView = views[ CellViewType.plainText ]( {
             parentHeader
-        } )
+        } );
     }
 
     return cellView;
