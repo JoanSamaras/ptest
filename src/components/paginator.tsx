@@ -102,14 +102,13 @@ export const Paginator: FC<Props> = p => {
                     style={{
                         marginLeft: spacings._6
                     }}
-                    onMouseOver={ () => setOpen( true ) }
-                    onMouseOut={ () => setOpen( false ) }
+                    onMouseEnter={ () => setOpen( true ) }
                 >
                     <Button profile='primary' size='default' as='div' onClick={ () => setOpen( !open ) }>
                         Items per page ({ pageSize })
                     </Button> 
                     
-                    <Popup open={ open }>
+                    <Popup open={ open } onMouseLeave={ () => setOpen( false ) }>
                         { itemsPerPage.map( item => (
                             <HoverableRow 
                                 key={ item } 
