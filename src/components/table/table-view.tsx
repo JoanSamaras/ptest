@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dictionary } from 'helpers/types';
 import { Cell, TableWrapper, Thead, Tbody, Tfoot, FullWidthRow } from './styled-components';
 import { Text } from 'components/text';
 import { calculateCellView } from './cell-view';
+import { Paginator } from 'components/paginator';
 
 type Props = {
     columnHeaders: string[]
@@ -10,12 +11,25 @@ type Props = {
     data: any[]
 }
 
+const availablePageSizes: number[] = [
+    5,
+    10,
+    15,
+    20,
+    25
+];
+
 export const StyledTable = ( p: Props ): JSX.Element => {
     const {
         columnHeaders,
         displayedColumnHeaders,
         data
     } = p;
+
+    const [ currentPage, setPage ] = useState( 1 );
+    const [ currentPageSize, setPageSize ] = useState( availablePageSizes[0] );
+    
+    const paginatedData = data.slice( ( currentPage-1 ) * currentPageSize, currentPage * currentPageSize );
 
     return (
         <TableWrapper
@@ -45,7 +59,7 @@ export const StyledTable = ( p: Props ): JSX.Element => {
             </Thead>
 
             <Tbody>
-                { data.map( d => (
+                { paginatedData.map( d => (
                     <FullWidthRow key={ JSON.stringify( d ) } withBorderBottom>
                         { columnHeaders.map( ( header, index ) => (
                             calculateCellView( d[ header ], columnHeaders[index] )
@@ -56,7 +70,16 @@ export const StyledTable = ( p: Props ): JSX.Element => {
 
             <Tfoot>
                 <FullWidthRow>
-                    <Cell>Cats win!</Cell>
+                    <Cell>
+                        <Paginator 
+                            total={ data.length }
+                            page={ currentPage } 
+                            pageSize={ currentPageSize } 
+                            toPage={ page => setPage( page ) } 
+                            setPageSize={ setPageSize }
+                            itemsPerPage={ availablePageSizes }
+                        />
+                    </Cell>
                 </FullWidthRow>
             </Tfoot>
 

@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import { css, FlattenSimpleInterpolation } from 'styled-components';
 
 export type Margins = {
     top?: string
@@ -8,7 +8,7 @@ export type Margins = {
     padding?: string
 };
 
-export const margins = ( p: Margins ) => css`
+export const margins = ( p: Margins ): FlattenSimpleInterpolation => css`
     ${ p.top && css`
         margin-top: ${ p.top }; 
     ` }

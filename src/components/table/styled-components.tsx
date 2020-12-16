@@ -17,6 +17,7 @@ export const Thead = styled.thead`
     display: flex;
     padding-bottom: ${ spacings._2 };
     border-bottom: ${ borderSizes._2 } solid ${ colours.primary5 };
+    width: max-content;
 `;
 
 export const Tbody = styled.tbody`

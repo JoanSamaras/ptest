@@ -208,7 +208,6 @@ export const calculateCellView = ( cellData: any | null, parentHeader: string ):
             }
         }
     } else {
-        console.log( 'in' )
         cellView = views[ CellViewType.plainText ]( {
             parentHeader
         } )
